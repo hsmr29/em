@@ -3,13 +3,11 @@ name: Test
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - '**'
+      - rxdb-gh-actions
 
 env:
   CI: true
+  rxdbAccessToken: ${{ secrets.RXDBACCESSTOKEN }}
 
 jobs:
   run:
@@ -24,6 +22,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Create package.json for adding RxDB access token
+        uses: 1arp/create-a-file-action@0.4.5
+        with:
+          path: '../'
+          file: 'package.json'
+          content: |
+            { "accessTokens": { "rxdb-premium": "${{ env.rxdbAccessToken }}" } }
 
       - name: Install npm dependencies
         run: yarn
