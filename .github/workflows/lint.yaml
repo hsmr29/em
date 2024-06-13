@@ -3,10 +3,7 @@ name: Lint
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - '**'
+      - rxdb-gh-actions
 
 env:
   CI: true
@@ -24,6 +21,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Create a package.json file for adding the RxDB access token
+        uses: 1arp/create-a-file-action@0.4.5
+        with:
+          path: '../'
+          file: 'package.json'
+          content: |
+            {"accessTokens":{"rxdb-premium":"${{ secrets.RXDB_PREMIUM_ACCESS_TOKEN }}"}}
 
       - name: Install npm dependencies
         run: yarn
